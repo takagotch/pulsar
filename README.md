@@ -26,6 +26,16 @@ class WsgiRequestTests(unittest.TestCase):
   async def test_url_handling(self):
   
   
+  
+  
+  async def test_wsgi_handler_404(self):
+    start = mock.MagicMock()
+    handler = wsgi.WsgiHandler()
+    request = await test_wsgi_request()
+    response = await handler(request.environ, start)
+    self.assertEqual(response.status_code, 404)
+    self.assertEqual(start.call_count, 1)
+  
 
   async def test_request_redirect(self):
     request = await test_wsgi_request()
