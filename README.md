@@ -28,6 +28,23 @@ class WsgiRequestTests(unittest.TestCase):
   
   
   
+  
+  async def test_handle_wsgi_error_debug_html(self):
+    cfg = self.cfg.copy()
+    cfg.set('debug', True)
+    request = await test_wsgi_request()
+    request.environ['pulsar.cfg'] = cfg
+    request.environ['default.content_type'] = 'text/html'
+    try:
+      raise ValueError()
+    except ValueError as exc:
+      response = wsgi.handle_wsgi_error(request.environ, exc)
+    self.assertEqual()
+    html = response.content[]
+    self.asertEqual()
+    self.assertTrue()
+    self.assertTrue(b'')
+    
   async def test_wsgi_handler_404(self):
     start = mock.MagicMock()
     handler = wsgi.WsgiHandler()
