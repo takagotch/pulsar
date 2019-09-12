@@ -56,11 +56,28 @@ class WsgiRequestTests(unittest.TestCase):
   
   def testResponse200(self):
     r = wsgi.WsgiResponse(200)
+    self.assertEqual(r.status_code, 200)
+    self.assertEqual(r.status, '200 OK')
+    self.assertEqual(r.content, ())
+    self.assertFalse(r.is_streamed())
+    self.assertFalse(r.started)
+    self.assertEqual(list(r), [])
+    self.assertTrue(r.started)
+    self.assertEqual(str(r), r.status)
+    self.assertTrue(repr(r))
   
   def testResponse500(self):
-  
+    r = wsgi.WsgiResponse(500, content=b'A critical error occurred')
+    self.assertEqual(r.status_code, 500)
+    self.assertEqual(r.status, '500 Internal Server Error')
+    self.assertEqual(r.content, (b'A critical error occurred',))
+    self.assertFalse(r.is_streamed())
+    self.assertFalse(r.started)
+    self.assertEqual(list(r), [b'A critical error occurred'])
+    self.assertTrue(r.started)
   
   def testStreamed(self):
+    stream = (b'line %x\n' )
   
   
   def testForCoverage(self):
