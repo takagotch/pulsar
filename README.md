@@ -19,16 +19,73 @@ from pulsar.utils.lib import http_date
 class WsgiRequestTests(unittest.TestCase):
   
   async def test_absolute_path(self):
+    uri = 'http://bbc.co.uk/news/'
+    request = await test_request(uri)
+    self.assertEqual(request.get('RAW_URI'), '/news/')
+    self.assertEqual(request.path, '/news/')
+    self.assertEqual(request.absolute_uri(), uri)
   
   async def test_is_secure(self):
+    request = await test_wsgi_request('https://example.com')
+    self.assertTrue(request.is_secure)
+    self.assertEaual(request.environ['HTTPS'], 'on')
+    self.assertEqual(request.environ['wsgi.url_scheme'], 'https')
   
   async def test_get_host(self):
+    request = await test_wsgi_request(headers=[('host', 'blaa.com')])
+    self.assertEqual(request.get_host(), 'blaa.com')
+    
+  async def test_full_path_path(self):
+    request = await test_wsgi_request()
+    self.assertEqual(request.full_path(), '/')
+    self.assertEqual(request.full_path('/foo'), '/foo')
   
-  async def test_full_path_query(self):
+  async def test_full_query(self):
+    request = await test_wsgi_request('/bla?path=foo&id=5')
+    self.assertEqual(request.path, '/bla')
+    self.assertEqual(request.full_path, {'path': 'foo', 'id': '5'})
+    self.assertEqual(request.full_path(), '/bla')
+    # self.assertTrue(request.full_path() in ('/bla?path=foo&id=5', '/bla?id=5&path=foo'))
+    self.assertEqual(request.full_path(g=7), '/bla?g=7')
   
   async def test_url_handling(self):
+    target = '/\N{SNOWMAN}'  
+    request = await test_wsgi_request(target)
+    path = urlparse(request.path).path
+    self.asertEqual(path, target)
   
+  def testResponse200(self):
+    r = wsgi.WsgiResponse(200)
   
+  def testResponse500(self):
+  
+  def testStreamed(self):
+  
+  def testForCoverage(self):
+  
+  def test_parse_authorization_header(self):
+  
+  def testCookies(self):
+  
+  def testDeleteCookie(self):
+  
+  def test_far_expiration(self):
+  
+  def test_max_age_expiration(self):
+  
+  def test_httponly_cookie(self):
+  
+  def test_headers(self):
+  
+  def testBuildWsgiApp(self):
+  
+  def testWsgiHandler(self):
+  
+  def test_clean_path_middleware(self):
+  
+  async def test_handle_wsgi_error(self):
+  
+  async def test_handle_wsgi_error_debug(self):
   
   
   
