@@ -59,35 +59,58 @@ class WsgiRequestTests(unittest.TestCase):
   
   def testResponse500(self):
   
+  
   def testStreamed(self):
+  
   
   def testForCoverage(self):
   
+  
   def test_parse_authorization_header(self):
+  
   
   def testCookies(self):
   
+  
   def testDeleteCookie(self):
+  
   
   def test_far_expiration(self):
   
+  
   def test_max_age_expiration(self):
+  
   
   def test_httponly_cookie(self):
   
+  
   def test_headers(self):
+  
   
   def testBuildWsgiApp(self):
   
+  
   def testWsgiHandler(self):
+  
   
   def test_clean_path_middleware(self):
   
+  
   async def test_handle_wsgi_error(self):
   
+  
   async def test_handle_wsgi_error_debug(self):
-  
-  
+    cfg = self.cfg.copy()
+    cfg.set('debug', True)
+    request = await test_wsgi_request()
+    request.environ['pulsar.cfg'] = cfg
+    try:
+      raise ValueError('just a test for debug debug error handler')
+    except ValueError as exc:
+      response = wsgi.handle_wsgi_error(request.environ, exc)
+    self.assertEqual(response.status_code, 500)
+    self.assertEqual(response.content_type, 'text/plain')
+    self.assertEqual(len(response.content), 1)
   
   async def test_handle_wsgi_error_debug_html(self):
     cfg = self.cfg.copy()
@@ -96,14 +119,14 @@ class WsgiRequestTests(unittest.TestCase):
     request.environ['pulsar.cfg'] = cfg
     request.environ['default.content_type'] = 'text/html'
     try:
-      raise ValueError()
+      raise ValueError('just a test for debug wsgi error handler')
     except ValueError as exc:
       response = wsgi.handle_wsgi_error(request.environ, exc)
-    self.assertEqual()
-    html = response.content[]
-    self.asertEqual()
-    self.assertTrue()
-    self.assertTrue(b'')
+    self.assertEqual(response.status_code, 500)
+    html = response.content[0]
+    self.asertEqual(response.content_type, 'text/html')
+    self.assertTrue(html.startswith(b'<!DOCTYPE html>'))
+    self.assertTrue(b'<title>500 Internal Server Error</title>' in html)
     
   async def test_wsgi_handler_404(self):
     start = mock.MagicMock()
