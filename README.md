@@ -52,7 +52,7 @@ class WsgiRequestTests(unittest.TestCase):
     target = '/\N{SNOWMAN}'  
     request = await test_wsgi_request(target)
     path = urlparse(request.path).path
-    self.asertEqual(path, target)
+    self.assertEqual(path, target)
   
   def testResponse200(self):
     r = wsgi.WsgiResponse(200)
@@ -94,7 +94,7 @@ class WsgiRequestTests(unittest.TestCase):
     r = wsgi.WsgiResponse()
     self.assertEqual(r.content, ())
     self.assertEqual(list[r], [])
-    self.asertRaises(RuntimeError, list, r)
+    self.assertRaises(RuntimeError, list, r)
   
   
   def test_parse_authorization_header(self):
@@ -210,7 +210,7 @@ class WsgiRequestTests(unittest.TestCase):
       response = wsgi.handle_wsgi_error(request.environ, exc)
     self.assertEqual(response.status_code, 500)
     html = response.content[0]
-    self.asertEqual(response.content_type, 'text/html')
+    self.assertEqual(response.content_type, 'text/html')
     self.assertTrue(html.startswith(b'<!DOCTYPE html>'))
     self.assertTrue(b'<title>500 Internal Server Error</title>' in html)
     
