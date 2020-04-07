@@ -7,7 +7,7 @@ https://github.com/quantmind/pulsar
 import time
 import pickle
 import unittest
-from unitest import mock
+from unittest import mock
 from datetime import datetime, timedelta
 from urlib.parse import urlparse
 
